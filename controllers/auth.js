@@ -9,14 +9,20 @@ const register = async(req,res)=>{
     if(!name || !email || !password){
         throw new BadRequestError('Please fill out all the fields')
     }
-       
-    const user = await userModel.create(req.body)
-    const token = await user.generateAccessToken()
-    res.status(StatusCodes.CREATED).json({
-            id: user._id,
-            name: user.name,
-            token: token
-        })
+    try{
+        const user = await userModel.create(req.body)
+        const token = await user.generateAccessToken()
+        res.status(StatusCodes.CREATED).json({
+                id: user._id,
+                name: user.name,
+                token: token
+            })
+    }
+    catch(error){
+        console.log(error.message)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error: "Something went wrong, please try again!"})
+    }   
+    
     
 
        
@@ -42,13 +48,19 @@ const login = async(req,res)=>{
         throw new BadRequestError('Incorrect password!')
     }
 
+    try{
+        const token = await user.generateAccessToken()
+        res.status(StatusCodes.OK).json({
+                UserId: user._id,
+                name : user.name,
+                token : token
+            })
+    }
+    catch(error){
+        console.log(error.message)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error: "Something went wrong, please try again!"})
+    }
     
-    const token = await user.generateAccessToken()
-    res.status(StatusCodes.OK).json({
-            UserId: user._id,
-            name : user.name,
-            token : token
-        })
    
 
 }

@@ -13,7 +13,6 @@ const authenticationMiddleware = async(req,res,next)=>{
       const payload = jwt.verify(token,process.env.JWT_SECRET)
       req.user = {userId: payload.userId, name: payload.name}
       req.user.roles = payload.user_roles
-      console.log(req.user.roles)
       next()
 
    }
