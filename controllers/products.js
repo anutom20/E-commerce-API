@@ -5,9 +5,64 @@ const {NotFoundError, BadRequestError} = require('../errors')
 const getAllProducts = async(req,res)=>{
 
     try{
-        const product = await productModel.find({})
-        res.status(StatusCodes.OK).json({prod: product,count : product.length})
+
+        const {name,color,brand,numericFilters, sort, fields} = req.query
+        const queryObject = {}
+   
+        if(name){
+            queryObject.name = {$regex:name, $options:'i'} 
+        } 
+        if(color) queryObject.color = color
+        if(brand) queryObject.brand = brand
+   
+        if(numericFilters){
+           const operatorMap = {
+               '>':'$gt',
+               '>=':'$gte',
+               '=':'$eq',
+               '<':'$lt',
+               '<=':'$lte',
+           }
+           const regEx = /\b(>|>=|=|<|<=)\b/g
+           let filters = numericFilters.replace(
+               regEx,
+               (match)=> `-${operatorMap[match]}-`
+           )
+
+           let valObj = {}
+           filters = filters.split(',').forEach((item)=>{
+            const [field, operator, value] = item.split('-')
+            valObj[operator] = Number(value)
+            queryObject[field] = valObj 
+             
+           })
+            
+           
+        }
+   
+        let result = productModel.find(queryObject)
+        if(sort){
+           const sortList = sort.split(',').join(' ')
+           result = result.sort(sortList)
+        }
+   
+        if(fields){
+           const fieldsList = fields.split(',').join(' ')
+           result = result.select(fieldsList)
+        }
+   
+        const page = Number(req.query.page) || 1
+        const limit = Number(req.query.limit) || 10
+        const skip = (page-1) * 10
+   
+        result = result.skip(skip).limit(limit)
+        
+        const products = await result
+        res.status(StatusCodes.OK).json({products,count : products.length})
+         
+       
     }
+     
     catch(error){
         console.log(error)
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error:error.message})
