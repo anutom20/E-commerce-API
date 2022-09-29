@@ -8,7 +8,14 @@ const productSchema = new Schema({
     },
     price:{
         type:Number,
-        required:[true, 'Please provide product price']
+        required:[true, 'Please provide product price'],
+        validate: {
+            validator: function(p) {
+              return p>=0
+            },
+            message: props => `${props.value} is not a valid price!`
+          }
+
     },
     brand:{
         type:String,

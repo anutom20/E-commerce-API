@@ -11,6 +11,7 @@ const port = process.env.PORT || 3000
 // route controllers
 const authRouter = require('./routes/auth')
 const productRouter = require('./routes/products')
+const cartRouter = require('./routes/cart')
 
 // middleware
 const errorHandlerMiddleware = require('./middleware/error-handler')
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
 // routes
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/products', productRouter)
+app.use('/api/v1/cart', cartRouter)
 
 
 app.get('/api/v1/test' , async (req, res) => {

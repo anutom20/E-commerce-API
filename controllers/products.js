@@ -9,8 +9,8 @@ const getAllProducts = async(req,res)=>{
         res.status(StatusCodes.OK).json({prod: product,count : product.length})
     }
     catch(error){
-        console.log(error.message)
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error: "Something went wrong, please try again!"})
+        console.log(error)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error:error.message})
     }
     
 
@@ -29,11 +29,12 @@ const getSingleProduct = async(req,res)=>{
 const AddProduct = async(req,res)=>{
     try{
         const product = await productModel.create(req.body)
+        console.log(req.body)
         res.status(StatusCodes.CREATED).json({product})
     }
     catch(error){
-        console.log(error.message)
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error: "Something went wrong, please try again!"})
+        console.log(error)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error:error.message})
     }
 }
 
