@@ -74,7 +74,7 @@ const getAllProducts = async(req,res)=>{
 
 
 const getSingleProduct = async(req,res)=>{
-    const productId = req.params.id
+    const productId = req.params.productId
     const product = await productModel.findOne({_id:productId})
     if(!product) throw new NotFoundError(`No product with id : ${productId}`)
     res.status(StatusCodes.OK).json(product)   
@@ -85,7 +85,6 @@ const getSingleProduct = async(req,res)=>{
 const AddProduct = async(req,res)=>{
     try{
         const product = await productModel.create(req.body)
-        console.log(req.body)
         res.status(StatusCodes.CREATED).json({product})
     }
     catch(error){
@@ -96,7 +95,7 @@ const AddProduct = async(req,res)=>{
 
 
 const UpdateProduct = async(req,res)=>{
-    const productId = req.params.id
+    const productId = req.params.productId
     const {name, price} = req.body
     if(name == '' || !price){
         throw new BadRequestError('name and price cannot be empty')
@@ -111,7 +110,7 @@ const UpdateProduct = async(req,res)=>{
 
 const DeleteSingleProduct = async(req,res)=>{
 
-    const productId = req.params.id
+    const productId = req.params.productId
     const product = await productModel.findByIdAndRemove(productId)
     if(!product) throw new NotFoundError(`No product with id : ${productId}`)
     res.status(StatusCodes.OK).json({message : `Item with product id : ${productId} deleted successfully!`})   

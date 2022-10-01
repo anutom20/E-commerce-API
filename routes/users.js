@@ -8,7 +8,29 @@ const {
     getSingleUser
 } = require('../controllers/users')
 
-router.route('/').get(authenticationMiddleware,verifyRoles(ROLES_LIST.Admin),getAllUsers)
-router.route('/:id').get(authenticationMiddleware,getSingleUser)
+const{
+    addProductToCart,
+    removeProductFromCart,
+    emptyTheCart,
+    showCart,
+    updateProductQuantityInCart
+} = require('../controllers/cart')
+
+router.use('/',authenticationMiddleware)
+router.route('/').get(verifyRoles(ROLES_LIST.Admin),getAllUsers)
+router.route('/:userId').get(getSingleUser)
+
+router.route('/:userId/cart')
+.get(showCart)
+.delete(emptyTheCart)
+
+
+router.route('/:userId/cart/:productId')
+.patch(updateProductQuantityInCart)
+.post(addProductToCart)
+.delete(removeProductFromCart)
+
+
+
 
 module.exports = router

@@ -12,13 +12,14 @@ const {
     DeleteSingleProduct
 } = require('../controllers/products')
 
+
 router.route('/')
-.get(authenticationMiddleware , getAllProducts)
+.get(getAllProducts)
 .post(authenticationMiddleware,verifyRoles(ROLES_LIST.Admin),AddProduct)
 
-router.route('/:id')
-.get(authenticationMiddleware,  getSingleProduct)
-.patch(authenticationMiddleware,  verifyRoles(ROLES_LIST.Admin), UpdateProduct)
-.delete(authenticationMiddleware, verifyRoles(ROLES_LIST.Admin), DeleteSingleProduct)
+router.route('/:productId')
+.get(getSingleProduct)
+.patch(authenticationMiddleware,verifyRoles(ROLES_LIST.Admin), UpdateProduct)
+.delete(authenticationMiddleware,verifyRoles(ROLES_LIST.Admin), DeleteSingleProduct)
 
 module.exports = router

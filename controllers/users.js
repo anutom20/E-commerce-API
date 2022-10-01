@@ -24,12 +24,12 @@ const getSingleUser = async(req,res,next)=>{
         const User = await userModel.findById(user_id)
         const role = User.userRoles.Admin
         if(!role || role !== ROLES_LIST.Admin){
-            req.params.id = user_id
+            req.params.userId = user_id
         }
-        if(req.params.id !== 'id'){
-            const userSearchedByAdmin = await userModel.findById(req.params.id)
+        if(req.params.userId !== 'userId'){
+            const userSearchedByAdmin = await userModel.findById(req.params.userId)
             if(!userSearchedByAdmin){
-                return res.status(StatusCodes.BAD_REQUEST).json({msg:`User with the id : ${req.params.id} does not exist`})
+                return res.status(StatusCodes.BAD_REQUEST).json({msg:`User with the id : ${req.params.userId} does not exist`})
             }
             return res.status(StatusCodes.OK).json(userSearchedByAdmin)
         }

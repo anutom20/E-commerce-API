@@ -5,7 +5,7 @@ const {NotFoundError, BadRequestError} = require('../errors')
 
 const addProductToCart = async (req,res)=>{
     const user_id = req.user.userId
-    const productId = req.params.id
+    const productId = req.params.productId
     
    // check if the product exists in the database
     
@@ -53,7 +53,7 @@ const addProductToCart = async (req,res)=>{
 const removeProductFromCart = async (req,res)=>{
    
     const user_id = req.user.userId
-    const productId = req.params.id
+    const productId = req.params.productId
 
     const cartProduct = await cartModel.findOneAndRemove({UserId: user_id , productId: productId})
 
@@ -81,7 +81,6 @@ const emptyTheCart = async (req,res)=>{
 
 const showCart = async (req,res)=>{
     
-
     try{
         const user_id = req.user.userId
         const cartProducts = await cartModel.find({UserId: user_id})
@@ -94,7 +93,7 @@ const showCart = async (req,res)=>{
     cartProducts.forEach((product)=>{
         grandTotal += product.total
     })
-
+    
      res.status(StatusCodes.OK).json({cart:cartProducts, grandTotal: grandTotal})
     }
     catch(error){
@@ -108,7 +107,7 @@ const showCart = async (req,res)=>{
 const updateProductQuantityInCart = async(req,res)=>{
     
     const user_id = req.user.userId
-    const productId = req.params.id
+    const productId = req.params.productId
     
 
     const product = await cartModel.findOne({UserId:user_id, productId:productId})

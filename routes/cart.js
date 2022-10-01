@@ -9,8 +9,9 @@ const{
  updateProductQuantityInCart
 } = require('../controllers/cart')
 
+router.use('/',authenticationMiddleware)
 router.route('/')
-.get(authenticationMiddleware, showCart)
+.get(showCart)
 .delete(authenticationMiddleware , emptyTheCart)
 
 router.route('/:id')
