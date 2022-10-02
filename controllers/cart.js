@@ -108,24 +108,20 @@ const removeProductFromCart = async (req,res)=>{
 
 const emptyTheCart = async (req,res)=>{
     
-    try{
+    
     const user_id = req.user.userId
     const noOfDocumentsDeleted = await cartModel.deleteMany({UserId:user_id})
     res.status(StatusCodes.OK).json({message:'cart successfully emptied!', no_deleted:noOfDocumentsDeleted})
-    }
-    catch(error){
-        console.log(error)
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error:error.message})
-    }
+   
 
 
 }
 
 const showCart = async (req,res)=>{
     
-    try{
-        const user_id = req.user.userId
-        const cartProducts = await cartModel.find({UserId: user_id})
+     
+    const user_id = req.user.userId
+    const cartProducts = await cartModel.find({UserId: user_id})
 
     if(cartProducts.length == 0){
         return res.status(StatusCodes.OK).json({message:'Cart is empty!'})
@@ -137,11 +133,7 @@ const showCart = async (req,res)=>{
     })
     
      res.status(StatusCodes.OK).json({cart:cartProducts, grandTotal: grandTotal})
-    }
-    catch(error){
-        console.log(error)
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error:error.message})
-    }
+    
 
 
 }
@@ -157,18 +149,14 @@ const updateProductQuantityInCart = async(req,res)=>{
         throw new NotFoundError(`Product with id : ${productId} not found in the cart`)
     }
     
-    try{
+    
     const newQuantity = req.body.quantity       
     updateDetails = {total:product.price*newQuantity, quantity:newQuantity}
     
     const productWithUpdatedQuantity = await cartModel.findOneAndUpdate({UserId:user_id, productId:productId},updateDetails,{new:true,runValidators:true})
 
     res.status(StatusCodes.OK).json(productWithUpdatedQuantity)
-    }
-    catch(error){
-        console.log(error)
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error: error.message})
-    }
+    
    
 
 }

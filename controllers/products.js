@@ -5,7 +5,7 @@ const { Admin } = require('../UserRoles/roles_list')
 
 const getAllProducts = async(req,res)=>{
 
-    try{
+    
         
         const {name,color,brand,numericFilters, sort, fields} = req.query
         const queryObject = {}
@@ -64,12 +64,9 @@ const getAllProducts = async(req,res)=>{
         res.status(StatusCodes.OK).json({products,count : products.length})
          
        
-    }
+    
      
-    catch(error){
-        console.log(error)
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error:error.message})
-    }
+    
     
 
 }
@@ -85,14 +82,10 @@ const getSingleProduct = async(req,res)=>{
 
 
 const AddProduct = async(req,res)=>{
-    try{
-        const product = await productModel.create(req.body)
-        res.status(StatusCodes.CREATED).json({product})
-    }
-    catch(error){
-        console.log(error)
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error:error.message})
-    }
+   
+     const product = await productModel.create(req.body)
+     res.status(StatusCodes.CREATED).json({product})
+    
 }
 
 

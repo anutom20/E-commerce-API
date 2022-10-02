@@ -6,20 +6,16 @@ const ROLES_LIST = require('../UserRoles/roles_list')
 
 const getAllUsers = async(req,res)=>{
    // allow only admin
-    try{
+
         const Users = await userModel.find({})
         res.status(StatusCodes.OK).json(Users)
-    }
-    catch(error){
-        console.log(error)
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({error:error.message})
-    }
+    
 }
 
 const getSingleUser = async(req,res,next)=>{
      // allow both users and admin
      
-     try{
+     
         user_id = req.user.userId
         const User = await userModel.findById(user_id)
         const role = User.userRoles.Admin
@@ -34,11 +30,7 @@ const getSingleUser = async(req,res,next)=>{
             return res.status(StatusCodes.OK).json(userSearchedByAdmin)
         }
         res.status(StatusCodes.OK).json({User})
-     }
-     catch(error){
-        console.log(error)
-        next(error)
-    }
+     
 
 }
 
