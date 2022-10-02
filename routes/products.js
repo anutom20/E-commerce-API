@@ -12,14 +12,20 @@ const {
     DeleteSingleProduct
 } = require('../controllers/products')
 
+const{
+    addToCartOrCreateSingleProductOrder
+} = require('../controllers/cart')
+
 
 router.route('/')
 .get(getAllProducts)
 .post(authenticationMiddleware,verifyRoles(ROLES_LIST.Admin),AddProduct)
 
+
 router.route('/:productId')
 .get(getSingleProduct)
 .patch(authenticationMiddleware,verifyRoles(ROLES_LIST.Admin), UpdateProduct)
 .delete(authenticationMiddleware,verifyRoles(ROLES_LIST.Admin), DeleteSingleProduct)
+.post(authenticationMiddleware,addToCartOrCreateSingleProductOrder)
 
 module.exports = router

@@ -9,14 +9,22 @@ const {
 } = require('../controllers/users')
 
 const{
-    addProductToCart,
     removeProductFromCart,
     emptyTheCart,
     showCart,
     updateProductQuantityInCart
 } = require('../controllers/cart')
 
+const{
+    getAllOrders,
+    getSingleOrder,
+    cancelOrder,
+    createOrder
+} = require('../controllers/orders')
+
+
 router.use('/',authenticationMiddleware)
+
 router.route('/').get(verifyRoles(ROLES_LIST.Admin),getAllUsers)
 router.route('/:userId').get(getSingleUser)
 
@@ -27,9 +35,18 @@ router.route('/:userId/cart')
 
 router.route('/:userId/cart/:productId')
 .patch(updateProductQuantityInCart)
-.post(addProductToCart)
 .delete(removeProductFromCart)
 
+
+
+router.route('/:userId/orders')
+.get(getAllOrders)
+.post(createOrder)
+
+
+router.route('/:userId/orders/:orderId')
+.delete(cancelOrder)
+.get(getSingleOrder)
 
 
 

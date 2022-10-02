@@ -11,7 +11,6 @@ const port = process.env.PORT || 3000
 // route controllers
 const authRouter = require('./routes/auth')
 const productRouter = require('./routes/products')
-const cartRouter = require('./routes/cart')
 const userRouter = require('./routes/users')
 
 // middleware
@@ -34,7 +33,6 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/products', productRouter)
-app.use('/api/v1/cart', cartRouter)
 app.use('/api/v1/users', userRouter)
 
 
