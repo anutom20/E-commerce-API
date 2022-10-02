@@ -60,7 +60,10 @@ const addToCartOrCreateSingleProductOrder = async(req,res)=>{
 
     let orderDetails = {}
   
-    const {tax, shippingFee ,  Address, quantity} = req.body
+    const {Address, quantity, phoneNumber} = req.body
+
+    const tax = Math.floor(Math.random()*100)
+    const shippingFee = 50
   
     const noOfItems = quantity || 1
     const grandTotal = product.price*noOfItems
@@ -78,7 +81,8 @@ const addToCartOrCreateSingleProductOrder = async(req,res)=>{
       shippingFee : shippingFee,
       Address : Address,
       grandTotal: grandTotal,
-      itemList : productDetails
+      itemList : productDetails,
+      phoneNumber:phoneNumber
     }
   
     const order = await orderModel.create(orderDetails)

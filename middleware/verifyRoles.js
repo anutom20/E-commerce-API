@@ -1,8 +1,8 @@
 const {UnauthenticatedError} = require('../errors')
 
-const verifyRoles = (...allowedRoles)=>{
+const verifyRoles = (...requiredRoles)=>{
   return async(req,res,next)=>{
-     const rolesArray =[...allowedRoles] 
+     const rolesArray =[...requiredRoles] 
      const userRoles = Object.values(req.user.roles)
        
      rolesArray.forEach((role)=>{

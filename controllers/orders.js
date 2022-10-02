@@ -13,7 +13,10 @@ const createOrder = async (req,res)=>{
       
         let orderDetails = {}
       
-        const {tax, shippingFee ,  Address} = req.body
+        const {Address, phoneNumber} = req.body
+
+        const tax = Math.floor(Math.random() * 100);
+        const shippingFee = 50
       
         let noOfItems = 0 , grandTotal = 0
       
@@ -28,7 +31,8 @@ const createOrder = async (req,res)=>{
           shippingFee : shippingFee,
           Address : Address,
           grandTotal: grandTotal,
-          itemList : cart
+          itemList : cart,
+          phoneNumber:phoneNumber
         }
       
         const order = await orderModel.create(orderDetails)

@@ -51,7 +51,8 @@ const orderSchema = new Schema({
                 },
                 message: props => `${props.value} is not a valid total!`
               }
-        }
+        },
+        
     }],
     tax:{
         type:Number,
@@ -86,6 +87,11 @@ const orderSchema = new Schema({
     Address:{
         type:String,
         required:[true,'Please provide address']
+    },
+    phoneNumber:{
+      type:String,
+      required:[true,'Please provide phone number'],
+      match : /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/
     }
 })
 
