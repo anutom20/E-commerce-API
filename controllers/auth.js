@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs')
 const { BadRequestError } = require('../errors')
 
 const register = async(req,res)=>{
+
     const {name,email, password} = req.body
 
     if(!name || !email || !password){
@@ -11,11 +12,15 @@ const register = async(req,res)=>{
     }
     
         const user = await userModel.create(req.body)
-        const token = await user.generateAccessToken()
+
+        // save session by adding user information since saveUninitialized is set to false
+        req.session.userId = user._id
+        req.session.name = user.name
+        req.session.userRoles = user.userRoles
+
         res.status(StatusCodes.CREATED).json({
                 id: user._id,
-                name: user.name,
-                token: token
+                name: user.name
             }) 
 
 }
@@ -39,11 +44,14 @@ const login = async(req,res)=>{
     }
 
     
-        const token = await user.generateAccessToken()
+        // save session by adding user information since saveUninitialized is set to false
+        req.session.userId = user._id
+        req.session.name = user.name
+        req.session.userRoles = user.userRoles
+
         res.status(StatusCodes.OK).json({
                 UserId: user._id,
-                name : user.name,
-                token : token
+                name : user.name
             })
     
     
@@ -53,16 +61,18 @@ const login = async(req,res)=>{
 }
 
 const logout = async(req,res)=>{
-    const authHeader = req.headers.authorization
-    if(!authHeader || !authHeader.startsWith('Bearer ')){
-        throw new Error('Logout failed , Authentication required!')
+    if(req.session.userId){
+        req.session.destroy(err => {
+            if (err) {
+              res.status(400).send('Unable to log out')
+            } else {
+              res.send('Logout successful')
+            }
+          });
     }
-
-    req.headers.authorization = ''
-    res.status(StatusCodes.OK).json({
-        message: "logout successful!",
-        token : ''
-    })
+    else{
+        res.status(StatusCodes.OK).send('User not logged in')
+    }
     
 }
 

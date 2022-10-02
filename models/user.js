@@ -48,15 +48,6 @@ UserSchema.pre('save',async function(){
 
 })
 
-UserSchema.methods.generateAccessToken = function(){
-    return jwt.sign({
-        userId:this._id,
-        name: this.name,
-        user_roles: this.userRoles
-    }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_LIFETIME
-    })
-}
 
 UserSchema.methods.comparePassword = async function(EnteredPassword){
     isMatch = await bcrypt.compare(EnteredPassword, this.password)

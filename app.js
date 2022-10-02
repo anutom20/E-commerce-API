@@ -4,6 +4,9 @@ require('express-async-errors')
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
+const session = require('express-session')
+const mongoDBSession = require('connect-mongodb-session')(session)
+
 
 
 const port = process.env.PORT || 3000 
@@ -22,7 +25,21 @@ const NotFoundMiddleware = require('./middleware/NotFoundMiddleware')
 app.use(express.json())
 
 
+const store = new mongoDBSession({
+  uri : process.env.MONGO_URI,
+  collection: "mySessions",
+  clear_interval: 3600
+})
 
+
+// app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store:store,
+  cookie: {maxAge: 1000 * 60 * 30}
+}))
 
 app.get('/', (req, res) => {
   res.send('Hello World!')

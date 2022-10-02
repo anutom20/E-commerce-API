@@ -1,23 +1,17 @@
 const jwt = require('jsonwebtoken')
 const {UnauthenticatedError} = require('../errors')
+const {StatusCodes} = require('http-status-codes')
+const UnautheticatedError = require('../errors/Unautheticated')
 const authenticationMiddleware = async(req,res,next)=>{
-   // check header
-   const authHeader = req.headers.authorization
-   if(!authHeader || !authHeader.startsWith('Bearer ')){
-      throw new UnauthenticatedError('Authentication Invalid')
-   }
+   // check if the session is present
 
-   const token = authHeader.split(' ')[1]
-
-   try{
-      const payload = jwt.verify(token,process.env.JWT_SECRET)
-      req.user = {userId: payload.userId, name: payload.name}
-      req.user.roles = payload.user_roles
+   if(req.session.userId){
+      req.user = {userId:req.session.userId, name:req.session.name}
+      req.user.roles = req.session.userRoles
       next()
-
    }
-   catch(error){
-      throw new UnauthenticatedError('Authentication Invalid')
+   else{
+      throw new UnautheticatedError('Not authorized to access this route')
    }
 
 
