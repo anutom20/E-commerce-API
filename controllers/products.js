@@ -14,7 +14,9 @@ const getAllProducts = async(req,res)=>{
             queryObject.name = {$regex:name, $options:'i'} 
         } 
         if(color) queryObject.color = color
-        if(brand) queryObject.brand = brand
+        if(brand){
+            queryObject.brand = {$regex:brand, $options:'i'}
+        } 
    
         if(numericFilters){
            const operatorMap = {
