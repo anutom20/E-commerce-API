@@ -1,6 +1,7 @@
 const productModel = require('../models/product')
 const cartModel = require('../models/cart')
 const orderModel = require('../models/order')
+const userModel = require('../models/user')
 const {StatusCodes} = require('http-status-codes')
 const {NotFoundError, BadRequestError} = require('../errors')
 
@@ -44,18 +45,35 @@ const createOrder = async (req,res)=>{
 
 const getAllOrders = async(req,res)=>{
     
-    try{
         const user_id = req.user.userId
-        const orders = await orderModel.find({UserId:user_id})
-        if(orders.length == 0){
-            return res.status(StatusCodes.OK).json({msg:'No orders now, create an order!'})
+        if(req.params.userId === 'userId'){
+         const orders = await orderModel.find({UserId:user_id})
+         if(orders.length == 0){
+             res.status(StatusCodes.OK).json({msg:'No orders now, create an order!'})
         }
-        res.status(StatusCodes.OK).json({ordersList:orders, count:orders.length})
-    }
-    catch(error){
-        console.log(error)
-        next(error)
-    }
+        else{
+            res.status(StatusCodes.OK).json({ordersList:orders, count:orders.length})
+        } 
+         
+        }
+        else{
+            const user = await userModel.findOne({_id:req.params.userId})
+            if(!user){
+                throw new BadRequestError(`No user with the id :${user_id}`)
+            }
+            const orders = await orderModel.find({UserId:req.params.userId})
+            if(orders.length == 0){
+                res.status(StatusCodes.OK).json({msg:`No orders found with user with id : ${req.params.userId}`})
+           }
+           else{
+               res.status(StatusCodes.OK).json({ordersList:orders, count:orders.length})
+           } 
+            
+        }
+        
+       
+    
+  
 
 }
 
@@ -64,12 +82,30 @@ const getSingleOrder = async(req,res)=>{
     
     const user_id = req.user.userId
     const orderId = req.params.orderId
-    const order = await orderModel.findOne({UserId:user_id,_id:orderId})
-    if(!order){
-        throw new BadRequestError(`No order found with id ${orderId}`)
-    }
 
-    res.status(StatusCodes.OK).json(order)
+    if(req.params.userId === 'userId'){
+        const order = await orderModel.findOne({UserId:user_id,_id:orderId})
+        if(!order){
+            throw new BadRequestError(`No order found with id ${orderId}`)
+        }
+        res.status(StatusCodes.OK).json(order)
+    }
+    else{
+        const user = await userModel.findOne({_id:user_id})
+        if(!user){
+            throw new BadRequestError(`No user with the id :${user_id}`)
+        }
+        const order = await orderModel.findOne({UserId:req.params.userId,orderId:orderId})
+        if(!order){
+            res.status(StatusCodes.OK).json({msg:`No order found with id : ${orderId}`})
+       }
+       else{
+           res.status(StatusCodes.OK).json(order)
+       } 
+    }
+   
+
+   
     
    
 
