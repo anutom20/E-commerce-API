@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const {Schema} = mongoose;
-const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const ROLES_LIST = require('../UserRoles/roles_list')
 

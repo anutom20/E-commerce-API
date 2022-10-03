@@ -1,7 +1,7 @@
 const productModel = require('../models/product')
 const {StatusCodes} = require('http-status-codes')
 const {NotFoundError, BadRequestError} = require('../errors')
-const { Admin } = require('../UserRoles/roles_list')
+
 
 const getAllProducts = async(req,res)=>{
 

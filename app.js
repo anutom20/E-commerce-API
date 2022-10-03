@@ -38,7 +38,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store:store,
-  cookie: {maxAge: 1000 * 60 * 30}
+  cookie: {maxAge: process.env.MAX_AGE}
 }))
 
 app.get('/', (req, res) => {

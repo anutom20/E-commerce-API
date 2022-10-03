@@ -1,6 +1,3 @@
-const jwt = require('jsonwebtoken')
-const {UnauthenticatedError} = require('../errors')
-const {StatusCodes} = require('http-status-codes')
 const UnautheticatedError = require('../errors/Unautheticated')
 const authenticationMiddleware = async(req,res,next)=>{
    // check if the session is present

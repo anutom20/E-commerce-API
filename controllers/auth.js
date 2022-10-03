@@ -1,6 +1,5 @@
 const userModel = require('../models/user')
 const {StatusCodes} = require('http-status-codes')
-const bcrypt = require('bcryptjs')
 const { BadRequestError } = require('../errors')
 const ROLES_LIST = require('../UserRoles/roles_list')
 

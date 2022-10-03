@@ -1,7 +1,6 @@
 const userModel = require('../models/user')
 const {StatusCodes} = require('http-status-codes')
-const {NotFoundError, BadRequestError} = require('../errors')
-const {verifyRoles} = require('../middleware/verifyRoles')
+const {BadRequestError} = require('../errors')
 const ROLES_LIST = require('../UserRoles/roles_list')
 
 const getAllUsers = async(req,res)=>{

@@ -1,9 +1,8 @@
-const productModel = require('../models/product')
 const cartModel = require('../models/cart')
 const orderModel = require('../models/order')
 const userModel = require('../models/user')
 const {StatusCodes} = require('http-status-codes')
-const {NotFoundError, BadRequestError} = require('../errors')
+const {BadRequestError} = require('../errors')
 
 const createOrder = async (req,res)=>{
   
