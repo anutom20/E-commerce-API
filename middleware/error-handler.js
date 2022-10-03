@@ -33,7 +33,7 @@ const errorHandlerMiddleware = (err,req,res,next)=>{
         statusCode = StatusCodes.BAD_REQUEST
         msg = err.message
     }
-    console.log(err.message)
+    console.log(err)
     res.status(statusCode).json({error:msg});
 }
 

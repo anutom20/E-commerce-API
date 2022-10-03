@@ -2,26 +2,35 @@ const userModel = require('../models/user')
 const {StatusCodes} = require('http-status-codes')
 const bcrypt = require('bcryptjs')
 const { BadRequestError } = require('../errors')
+const ROLES_LIST = require('../UserRoles/roles_list')
 
 const register = async(req,res)=>{
 
     const {name,email, password} = req.body
 
+    
+
     if(!name || !email || !password){
         throw new BadRequestError('Please fill out all the fields')
     }
-    
-        const user = await userModel.create(req.body)
+
+    const userDetails = {
+        name : name,
+        email :email,
+        password:password
+    }
+        const users = await userModel.find({})
+        if(users.length == 0){
+         userDetails.userRoles = {Admin:ROLES_LIST.Admin}
+        }
+        const user = await userModel.create(userDetails)
 
         // save session by adding user information since saveUninitialized is set to false
         req.session.userId = user._id
         req.session.name = user.name
         req.session.userRoles = user.userRoles
 
-        res.status(StatusCodes.CREATED).json({
-                id: user._id,
-                name: user.name
-            }) 
+        res.status(StatusCodes.CREATED).json(user) 
 
 }
 

@@ -12,7 +12,7 @@ const getAllUsers = async(req,res)=>{
     
 }
 
-const getSingleUser = async(req,res,next)=>{
+const getSingleUser = async(req,res)=>{
      // allow both users and admin
      
      
@@ -34,8 +34,23 @@ const getSingleUser = async(req,res,next)=>{
 
 }
 
+const makeUserAdmin = async(req,res)=>{
+    const userId = req.params.userId
+
+    const user = await userModel.findById(userId)
+    if(!user){
+        throw new BadRequestError(`No user found with id : ${userId}`)
+    }
+    const updateDetails = {userRoles:{Admin:ROLES_LIST.Admin}}
+    const updatedUser = await userModel.findOneAndUpdate({_id:userId},updateDetails,{new:true,runValidators:true})
+
+    res.status(StatusCodes.OK).json({updatedUser})
+
+}
+
 
 module.exports = {
     getAllUsers,
-    getSingleUser
+    getSingleUser,
+    makeUserAdmin
 }

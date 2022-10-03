@@ -5,7 +5,8 @@ const verifyRoles = require('../middleware/verifyRoles')
 const ROLES_LIST = require('../UserRoles/roles_list')
 const {
     getAllUsers,
-    getSingleUser
+    getSingleUser,
+    makeUserAdmin
 } = require('../controllers/users')
 
 const{
@@ -26,7 +27,8 @@ const{
 router.use('/',authenticationMiddleware)
 
 router.route('/').get(verifyRoles(ROLES_LIST.Admin),getAllUsers)
-router.route('/:userId').get(getSingleUser)
+router.route('/:userId').get(getSingleUser).patch(verifyRoles(ROLES_LIST.Admin),makeUserAdmin)
+
 
 router.route('/:userId/cart')
 .get(showCart)
