@@ -25,7 +25,8 @@ const addToCartOrCreateSingleProductOrder = async(req,res)=>{
         const {
             name,
             price,
-            _id,     
+            _id,
+            image,     
            } = product
            
            const addedToCart = await cartModel.create({

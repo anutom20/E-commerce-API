@@ -71,15 +71,18 @@ const login = async(req,res)=>{
 const logout = async(req,res)=>{
     if(req.session.userId){
         req.session.destroy(err => {
+            res.clearCookie("connect.sid");
             if (err) {
               res.status(400).send('Unable to log out')
             } else {
               res.send('Logout successful')
             }
           });
+        
+          
     }
     else{
-        res.status(StatusCodes.OK).send('User not logged in')
+        res.status(StatusCodes.OK).json({message:'user not logged in'})
     }
     
 }

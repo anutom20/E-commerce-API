@@ -7,6 +7,7 @@ const {login,
 
 router.post('/register', register)
 router.post('/login',login)
-router.get('/logout', logout)
+router.delete('/logout', logout)
+
 
 module.exports = router

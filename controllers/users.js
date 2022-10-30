@@ -28,7 +28,7 @@ const getSingleUser = async(req,res)=>{
             }
             return res.status(StatusCodes.OK).json(userSearchedByAdmin)
         }
-        res.status(StatusCodes.OK).json({User})
+        res.status(StatusCodes.OK).json(User)
      
 
 }

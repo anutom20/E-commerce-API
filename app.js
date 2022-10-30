@@ -1,6 +1,8 @@
 require('dotenv').config()
 require('express-async-errors')
+const cookieParser = require('cookie-parser')
 
+const cors = require('cors');
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
@@ -9,7 +11,7 @@ const mongoDBSession = require('connect-mongodb-session')(session)
 
 
 
-const port = process.env.PORT || 3000 
+const port = process.env.PORT || 3001
 
 // route controllers
 const authRouter = require('./routes/auth')
@@ -20,29 +22,57 @@ const userRouter = require('./routes/users')
 const errorHandlerMiddleware = require('./middleware/error-handler')
 const NotFoundMiddleware = require('./middleware/NotFoundMiddleware')
 
+
+
+
 // body parser
 
 app.use(express.json())
 
+// cookie parser
+
+app.use(cookieParser())
+
+// enable all CORS requests
+
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+
+
 
 const store = new mongoDBSession({
   uri : process.env.MONGO_URI,
-  collection: "mySessions",
-  clear_interval: 3600
+  collection: "mySessions"
 })
 
 
 // app.set('trust proxy', 1) // trust first proxy
 app.use(session({
   secret: process.env.SESSION_SECRET,
-  resave: false,
+  resave: true,
   saveUninitialized: false,
   store:store,
-  cookie: {maxAge: process.env.MAX_AGE}
+  cookie: {maxAge: parseInt(process.env.MAX_AGE)},
+  rolling:true
+  
 }))
 
+const setClientCookie = (req,res,next)=>{
+  if(req.session.userId){
+    res.cookie("username", req.session.name , {
+      maxAge: parseInt(process.env.MAX_AGE),
+      httpOnly: false,
+      secure: false,
+      overwrite: true,
+    });
+  }
+  next()
+}
+
+app.use(setClientCookie)
+
+
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.json({message : "Hello world"})
 })
 
 
@@ -51,6 +81,8 @@ app.get('/', (req, res) => {
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/products', productRouter)
 app.use('/api/v1/users', userRouter)
+
+
 
 
 

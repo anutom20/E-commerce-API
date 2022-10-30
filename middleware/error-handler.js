@@ -31,7 +31,7 @@ const errorHandlerMiddleware = (err,req,res,next)=>{
     }
     if(err.code && err.code == 11000){
         statusCode = StatusCodes.BAD_REQUEST
-        msg = err.message
+        msg = 'Email already exists!'
     }
     console.log(err)
     res.status(statusCode).json({error:msg});
