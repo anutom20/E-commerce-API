@@ -10,8 +10,12 @@ const session = require('express-session')
 const mongoDBSession = require('connect-mongodb-session')(session)
 
 
+// extra security packages
+const helmet = require("helmet");
+const xss = require("xss-clean");
 
-const port = process.env.PORT || 3001
+
+const port = process.env.PORT || 3000
 
 // route controllers
 const authRouter = require('./routes/auth')
@@ -35,9 +39,10 @@ app.use(cookieParser())
 
 // enable all CORS requests
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: ["http://localhost:3000" , "https://anutom20-ecommerce-api.herokuapp.com"]}));
 
-
+app.use(helmet())
+app.use(xss())
 
 const store = new mongoDBSession({
   uri : process.env.MONGO_URI,
@@ -45,7 +50,7 @@ const store = new mongoDBSession({
 })
 
 
-// app.set('trust proxy', 1) // trust first proxy
+app.set('trust proxy', 1) // trust first proxy
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
