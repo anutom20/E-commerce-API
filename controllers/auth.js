@@ -72,6 +72,7 @@ const logout = async(req,res)=>{
     if(req.session.userId){
         req.session.destroy(err => {
             res.clearCookie("connect.sid");
+            res.clearCookie('username')
             if (err) {
               res.status(400).send('Unable to log out')
             } else {

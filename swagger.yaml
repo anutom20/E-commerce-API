@@ -84,7 +84,7 @@ paths:
           in: query
           schema:
             type: string
-          example: guitar
+          
         - name: brand
           in: query
           schema:
@@ -94,12 +94,12 @@ paths:
           in: query
           schema:
             type: string
-          example: brown
+       
         - name: price
           in: query
           schema:
             type: integer
-          example: 4000  
+          example: 15000  
           description: the product with price less than or equal to price value is fetched
         - name: sort
           in: query
@@ -111,12 +111,12 @@ paths:
           in: query
           schema:
             type: integer
-          example: 2
-        - name: queryParam
+          example: 1
+        - name: field
           in: query
           schema:
             type: string
-          example: addToCart
+          description: this refers to what properties do you want to get in the json response , for example [field = price name] gets only the price and name
         - name: limit
           in: query
           schema:
