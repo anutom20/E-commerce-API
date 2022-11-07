@@ -49,7 +49,7 @@ const createOrder = async (req,res)=>{
 const getAllOrders = async(req,res)=>{
     
         const user_id = req.user.userId
-        if(req.params.userId === 'userId'){
+        if(!req.params.userId){
          const orders = await orderModel.find({UserId:user_id})
          if(orders.length == 0){
              res.status(StatusCodes.OK).json({msg:'No orders now, create an order!'})
@@ -86,7 +86,7 @@ const getSingleOrder = async(req,res)=>{
     const user_id = req.user.userId
     const orderId = req.params.orderId
 
-    if(req.params.userId === 'userId'){
+    if(!req.params.userId){
         const order = await orderModel.findOne({UserId:user_id,_id:orderId})
         if(!order){
             throw new BadRequestError(`No order found with id ${orderId}`)

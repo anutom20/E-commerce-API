@@ -14,6 +14,13 @@ const mongoDBSession = require('connect-mongodb-session')(session)
 const helmet = require("helmet");
 const xss = require("xss-clean");
 
+// swagger
+
+const swaggerUI = require('swagger-ui-express')
+const YAML = require('yamljs')
+const swaggerDocument = YAML.load('./swagger.yaml')
+
+
 
 const port = process.env.PORT || 3000
 
@@ -37,12 +44,14 @@ app.use(express.json())
 
 app.use(cookieParser())
 
-// enable all CORS requests
+// enable all CORS requests with the given origins
 
 app.use(cors({ credentials: true, origin: ["http://localhost:3000" , "https://anutom20-ecommerce-api.herokuapp.com"]}));
 
 app.use(helmet())
 app.use(xss())
+
+app.use('/api-docs',swaggerUI.serve, swaggerUI.setup(swaggerDocument))
 
 const store = new mongoDBSession({
   uri : process.env.MONGO_URI,
@@ -77,7 +86,7 @@ app.use(setClientCookie)
 
 
 app.get('/', (req, res) => {
-  res.json({message : "Hello world"})
+  res.send('<h1> E-commerce-API</h1> <a href = "/api-docs">Documentation</a>')
 })
 
 

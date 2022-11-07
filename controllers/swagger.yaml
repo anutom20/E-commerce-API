@@ -1,0 +1,501 @@
+openapi: 3.0.0
+info:
+  title: E-commerce-API
+  version: 1.0.0
+servers:
+  - url: https://anutom20-ecommerce-api.herokuapp.com/api/v1
+components:
+  securitySchemes:
+    noauthAuth:
+      type: http
+      scheme: noauth
+    bearerAuth:
+      type: http
+      scheme: bearer
+    
+tags:
+  - name: User Auth
+  - name: Products
+  - name: Users
+  - name: Users > cart
+  - name: Users > orders
+paths:
+  
+  /auth/register:
+    post:
+      
+      tags:
+        - User Auth
+      summary: Register User
+      requestBody:
+        required: true 
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: newGuy
+                email: newbie@gmail.com
+                password: secret
+               
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /auth/login:
+    post:
+      tags:
+        - User Auth
+      summary: Login User
+      description: example user is one of the admin
+      requestBody:
+        required: true 
+        content: 
+          application/json:
+            schema:
+              type: object
+              example:
+                email: anurag@gmail.com
+                password: secret
+                
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /auth/logout:
+    delete:
+      tags:
+        - User Auth
+      summary: Logout User
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /products:
+    get:
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+          example: guitar
+        - name: brand
+          in: query
+          schema:
+            type: string
+          example: Juarez  
+        - name: color
+          in: query
+          schema:
+            type: string
+          example: brown
+        - name: price
+          in: query
+          schema:
+            type: integer
+          example: 4000  
+          description: the product with price less than or equal to price value is fetched
+        - name: sort
+          in: query
+          schema:
+            type: string
+          example: price
+          description: use - as prefix to sort in descending order , e.g. -price
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: 2
+        - name: queryParam
+          in: query
+          schema:
+            type: string
+          example: addToCart
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: 20  
+      tags:
+        - Products
+      summary: Get All Products
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Products
+      summary: Add Product
+      requestBody:
+        required: true 
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Guitar
+                price: 4789
+                color: red
+                rating: 4.5
+                brand: Intern
+                description: Intern INT-38C Acoustic Guitar Kit (Red)
+                image: https://images-eu.ssl-images-amazon.com/images/I/81C3A85xSvL._AC_UL600_SR600,400_.jpg
+                
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /products/{productId}:
+    get:
+      parameters:
+        - in: path
+          name: productId    # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The product ID
+      tags:
+        - Products
+      summary: Get Single Product
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      parameters:
+        - in: path
+          name: productId   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The product ID   
+      tags:
+        - Products
+      summary: Delete Single Product
+      security:
+        - noauthAuth: []
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+
+    patch:
+      parameters:
+        - in: path
+          name: productId   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The product ID
+      tags:
+        - Products
+      summary: Update Product
+      security:
+        - noauthAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: violin
+                price: 10789
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+
+    post:
+      tags:
+        - Products
+      summary: Add Item to Cart
+      security:
+        - noauthAuth: []
+                
+      
+      parameters:
+        - name: queryParam
+          in: query
+          required: true
+          schema:
+            type: string
+          example: addToCart
+          description: any other value than "addToCart" can result in an error
+        - in: path
+          name: productId   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The product ID
+          
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+            
+  /products/{id}:          
+ 
+    post:
+      tags:
+        - Products
+      summary: Create Single Product Order
+      security:
+        - noauthAuth: []
+      requestBody:
+        required: true 
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Address: Iet lucknow campus , b-block hostel , sitapur road , lucknow
+                tax: 90
+                shippingFee: 100
+                quantity: 4
+      
+      parameters:
+        - name: queryParam
+          in: query
+          required: true
+          schema:
+            type: string
+          example: createSingleProductOrder
+          description: any other value than "createSingleProductOrder" can result in an error
+        - in: path
+          name: id   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The product ID  
+          
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/cart:
+    get:
+      tags:
+        - Users > cart
+      summary: Show Cart
+      security:
+        - noauthAuth: []
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    delete:
+      tags:
+        - Users > cart
+      summary: Empty The Cart
+      security:
+        - noauthAuth: []
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/cart/{productId}:
+    delete:
+      parameters:
+        - in: path
+          name: productId   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The product ID 
+      tags:
+        - Users > cart
+      security:
+        - noauthAuth: []  
+      summary: Remove Item from Cart
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  
+    patch:
+      parameters:
+        - in: path
+          name: productId   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The product ID
+      tags:
+        - Users > cart
+      security:
+        - noauthAuth: []  
+      summary: Update Quantity in Cart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                quantity: 69
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/orders:
+    get:
+      tags:
+        - Users > orders
+      summary: Get All Orders
+      security:
+        - noauthAuth: []
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - Users > orders
+      summary: Create Order
+      security:
+        - noauthAuth: []
+      requestBody:
+        required: true 
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                Address: Iet lucknow campus , b-block hostel , sitapur road , lucknow
+                tax: 90
+                shippingFee: 100
+      
+      parameters:
+        - name: orderQueryParam
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 'createOrder'
+          description : any other value than "createOrder" can result in an error
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/orders/{orderId}:
+    delete:
+      parameters:
+        - in: path
+          name: orderId   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The order ID
+      tags:
+        - Users > orders
+      summary: Cancel Order
+      security:
+        - noauthAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  
+    get:
+      parameters:
+        - in: path
+          name: orderId   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The order ID
+      tags:
+        - Users > orders
+      summary: Get Single Order
+      security:
+        - noauthAuth: []
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get All Users
+      security:
+        - noauthAuth: []
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /users/{userId}:
+    get:
+      parameters:
+        - in: path
+          name: userId   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The user ID , to get the  currently logged in user , use userId = "userId", otherwise type any id to get any user
+      tags:
+        - Users
+      summary: Get Single User
+      security:
+        - noauthAuth: []
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      parameters:
+        - in: path
+          name: userId   # Note the name is the same as in the path
+          required: true
+          schema:
+            type: string
+          description: The user ID
+      tags:
+        - Users
+      summary: Make User Admin
+      security:
+        - noauthAuth: []
+      requestBody:
+        content: {}
+      
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
