@@ -11,3 +11,5 @@ Note : Heroku puts the app to sleep after 30 minutes of inactivity , so the init
 --> Added Admin Functionality , the admin has access to certain endpoints that user dosen't
 
 --> Authentication using sessions and cookies
+
+--> Added Documentation using Swagger UI
